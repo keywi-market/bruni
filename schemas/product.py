@@ -32,6 +32,8 @@ class ProductInDBBase(ProductBase):
     status: str
     count: int
     create_user: UUID
+    created_time: datetime
+    update_user: UUID
     updated_time: datetime
 
     class Config:

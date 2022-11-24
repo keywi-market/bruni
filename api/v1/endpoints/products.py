@@ -15,5 +15,5 @@ def create_item(
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductCreate,
 ) -> schemas.Product:
-    product = crud.product.create(db=db, obj_in=product_in)
+    product = crud.product.create(db=db, obj_in=product_in,user_id=product_in.user_id)
     return product
