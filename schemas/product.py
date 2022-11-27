@@ -21,9 +21,29 @@ class ProductCreate(ProductBase):
 
 
 # Update means using put method, not fetch method.
-class ProductUpdate(ProductBase):
-    status: Literal["selling", "booked", "sold"]
-    update_user_id: str
+class ProductUpdate(BaseModel):
+    title: Optional[str]
+    contents: Optional[str]
+    category: Optional[str]
+    brand: Optional[str]
+    price: Optional[int]
+    phone_number: Optional[str]
+    status: Optional[Literal["selling", "booked", "sold"]]
+    update_user: UUID
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "title": "Optional[str]",
+                "contents": "Optional[str]",
+                "category": "Optional[str]",
+                "brand": "Optional[str]",
+                "price": "Optional[str]",
+                "phone_number": "Optional[str]",
+                "status": "Optional[Literal[\"selling\", \"booked\", \"sold\"]]",
+                "update_user": "uuid"
+            }
+        }
 
 
 # Properties shared by models stored in DB
