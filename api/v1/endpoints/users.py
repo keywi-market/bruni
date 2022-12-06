@@ -11,20 +11,20 @@ router = APIRouter()
 
 
 @router.get("/{user_id}/products", response_model=List[schemas.Product])
-def read_items(
+def read_products(
         user_id: UUID,
         db: Session = Depends(deps.get_db),
         skip: int = 0,
         limit: int = 100,
 ) -> Any:
-    product = crud.product.get_by_user_id(db=db, user_id=user_id, skip=skip, limit=limit)
-    if not product:
+    products = crud.product.get_by_user_id(db=db, user_id=user_id, skip=skip, limit=limit)
+    if len(products) == 0:
         raise HTTPException(status_code=204, detail=f"{user_id} has no products")
-    return product
+    return products
 
 
 @router.post("/{user_id}/products", response_model=schemas.Product, status_code=201)
-def create_item(
+def create_product(
         *,
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductCreate,
@@ -35,7 +35,7 @@ def create_item(
 
 # patch or put ?!?!
 @router.patch("/{user_id}/products/{product_id}", response_model=schemas.Product)
-def create_item(
+def update_product(
         *,
         user_id: UUID,
         product_id: UUID,
@@ -44,6 +44,21 @@ def create_item(
 ) -> schemas.Product:
     product = crud.product.get_by_product_id(db=db, product_id=product_id)
     if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=404, detail="Product is not found")
+    if product.is_deleted is True:
+        raise HTTPException(status_code=404, detail=f"Product is already deleted")
     product = crud.product.update(db=db, db_obj=product, obj_in=product_in)
+    return product
+
+
+@router.delete("/{user_id}/products/{product_id}")
+def delete_product(
+        *,
+        user_id: UUID,
+        product_id: UUID,
+        db: Session = Depends(deps.get_db),
+):
+    product = crud.product.remove(db=db, product_id=product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product is not found")
     return product
