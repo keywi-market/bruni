@@ -4,8 +4,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-import crud, schemas
+import schemas
 from api import deps
+from crud import crud_product
 
 router = APIRouter()
 
@@ -17,7 +18,7 @@ def read_products(
         skip: int = 0,
         limit: int = 100,
 ) -> Any:
-    products = crud.product.get_by_user_id(db=db, user_id=user_id, skip=skip, limit=limit)
+    products = crud_product.get_by_user_id(db=db, user_id=user_id, skip=skip, limit=limit)
     if len(products) == 0:
         raise HTTPException(status_code=204, detail=f"{user_id} has no products")
     return products
@@ -29,7 +30,7 @@ def create_product(
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductCreate,
 ) -> schemas.Product:
-    product = crud.product.create(db=db, obj_in=product_in, user_id=product_in.user_id)
+    product = crud_product.create(db=db, obj_in=product_in, user_id=product_in.user_id)
     return product
 
 
@@ -42,12 +43,12 @@ def update_product(
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductUpdate,
 ) -> schemas.Product:
-    product = crud.product.get_by_product_id(db=db, product_id=product_id)
+    product = crud_product.get_by_product_id(db=db, product_id=product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product is not found")
     if product.is_deleted is True:
         raise HTTPException(status_code=404, detail=f"Product is already deleted")
-    product = crud.product.update(db=db, db_obj=product, obj_in=product_in)
+    product = crud_product.update(db=db, db_obj=product, obj_in=product_in)
     return product
 
 
@@ -58,7 +59,7 @@ def delete_product(
         product_id: UUID,
         db: Session = Depends(deps.get_db),
 ):
-    product = crud.product.remove(db=db, product_id=product_id)
+    product = crud_product.remove(db=db, product_id=product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product is not found")
     return product

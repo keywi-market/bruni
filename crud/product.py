@@ -36,4 +36,4 @@ class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
         return product
 
 
-product = CRUDProduct(Product)
+crud_product = CRUDProduct(Product)

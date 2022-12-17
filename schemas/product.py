@@ -1,4 +1,3 @@
-from abc import abstractmethod, ABCMeta
 from datetime import datetime
 from typing import Optional, Literal
 from uuid import UUID
@@ -50,7 +49,7 @@ class ProductUpdate(BaseModel):
 class ProductInDBBase(ProductBase):
     product_id: UUID
     status: str
-    count: int
+    count: Optional[int]
     create_user: UUID
     created_time: datetime
     update_user: UUID
