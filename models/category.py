@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from db.base_class import Base
 
@@ -14,5 +15,11 @@ class Category(Base):
     created_time = Column(DateTime, default=datetime.utcnow)
     update_user = Column(UUID(as_uuid=True))
     updated_time = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    brands = relationship(
+        "Brand",
+        back_populates="category",
+        cascade="all, delete, delete-orphan",
+    )
 
 # Category.__table__.create(engine)
