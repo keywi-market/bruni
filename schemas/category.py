@@ -1,6 +1,9 @@
+from typing import Optional, List
 from uuid import UUID
 
 from pydantic import BaseModel
+
+import schemas
 
 
 class CategoryBase(BaseModel):
@@ -19,6 +22,7 @@ class CategoryUpdate(CategoryBase):
 # Properties shared by models stored in DB
 class CategoryInDBBase(CategoryBase):
     category_id: UUID
+    brands: Optional[List[schemas.BrandInDBBase]]
 
     class Config:
         orm_mode = True

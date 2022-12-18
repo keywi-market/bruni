@@ -52,7 +52,7 @@ def update_product(
     return product
 
 
-@router.delete("/{user_id}/products/{product_id}")
+@router.delete("/{user_id}/products/{product_id}", status_code=200)
 def delete_product(
         *,
         user_id: UUID,
