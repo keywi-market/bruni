@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from crud.base import CRUDBase
 from models import Product
-from schemas import ProductCreate, ProductUpdate
+from schemas import ProductCreate, ProductUpdate, ProductOrderType
 
 
 class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
@@ -23,9 +23,57 @@ class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
             .offset(skip).limit(limit).all()
 
     def get_multi(
-            self, db: Session, *, skip: int = 0, limit: int = 100
+            self, db: Session, *, skip: int = 0, limit: int = 100,
+            order_by: ProductOrderType = ProductOrderType.RECENT, category_name: str = None, brand_name: str = None
     ) -> List[Product]:
-        return db.query(self.model).filter(self.model.is_deleted.is_(False)).offset(skip).limit(limit).all()
+
+        if category_name is None and brand_name is None:
+            q = db.query(self.model).filter(self.model.is_deleted.is_(False))
+
+        elif category_name is not None and brand_name is None:
+            q = db.query(self.model) \
+                .filter(
+                self.model.is_deleted.is_(False),
+                self.model.category == category_name
+            )
+
+        elif category_name is None and brand_name is not None:
+            q = db.query(self.model) \
+                .filter(
+                self.model.is_deleted.is_(False),
+                self.model.brand == brand_name
+            )
+
+        else:
+            q = db.query(self.model) \
+                .filter(
+                self.model.is_deleted.is_(False),
+                self.model.category == category_name,
+                self.model.brand == brand_name
+            )
+
+        if order_by == ProductOrderType.RECENT:
+            return q.order_by(self.model.created_time.desc()) \
+                .offset(skip).limit(limit).all()
+
+        elif order_by == ProductOrderType.HIGH_PRICE:
+            return q.order_by(self.model.price.desc()) \
+                .offset(skip).limit(limit).all()
+
+        elif order_by == ProductOrderType.LOW_PRICE:
+            return q.order_by(self.model.price.asc()) \
+                .offset(skip).limit(limit).all()
+
+        elif order_by == ProductOrderType.MOST_VIEWED:
+            return q.order_by(self.model.count.desc()) \
+                .offset(skip).limit(limit).all()
+
+        elif order_by == ProductOrderType.SELLING:
+            return q.filter(self.model.status == Product.STATUS_DEFAULT_VALUE) \
+                .order_by(self.model.created_time.desc()) \
+                .offset(skip).limit(limit).all()
+
+        return q.order_by(self.model.created_time.desc())
 
     def remove(self, db: Session, product_id: UUID) -> Optional[Product]:
         product = db.query(self.model).filter(self.model.product_id == product_id).first()

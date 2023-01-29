@@ -8,6 +8,8 @@ from db.base_class import Base
 
 
 class Product(Base):
+    STATUS_DEFAULT_VALUE = "selling"
+
     product_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), index=True)
     title = Column(String)
@@ -16,7 +18,7 @@ class Product(Base):
     brand = Column(String(100), index=True, nullable=True)
     price = Column(Integer)
     phone_number = Column(String(100))
-    status = Column(String(100), default="selling")
+    status = Column(String(100), default=STATUS_DEFAULT_VALUE)
     count = Column(Integer, default=0)
     is_deleted = Column(Boolean(), default=False)
     create_user = Column(UUID(as_uuid=True))

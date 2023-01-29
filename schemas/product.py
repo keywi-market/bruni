@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import Optional, Literal
 from uuid import UUID
 
@@ -62,3 +63,11 @@ class ProductInDBBase(ProductBase):
 # Properties to return to client
 class Product(ProductInDBBase):
     pass
+
+
+class ProductOrderType(str, Enum):
+    RECENT = "recent"
+    HIGH_PRICE = "high_price"
+    LOW_PRICE = "low_price"
+    MOST_VIEWED = "most_viewed"
+    SELLING = "selling"
