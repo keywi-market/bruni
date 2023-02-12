@@ -3,6 +3,7 @@ import uuid
 import boto3 as boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
+from fastapi import HTTPException
 from loguru import logger
 
 from core.config import settings
@@ -46,11 +47,11 @@ class FileService:
                 },
                 ExpiresIn=600
             )
-            logger.info("Got presigned URL: %s", url)
+            logger.info("Got presigned URL")
         except ClientError:
             logger.exception(
-                "Couldn't get a presigned URL for client method '%s'.", "put_object")
-            raise
+                "Couldn't get a presigned URL for client method put_object.")
+            raise HTTPException(status_code=500)
         return url
 
 
