@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
     AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
     AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY")
+    BUCKET_NAME = os.getenv("BUCKET_NAME")
 
 
 settings = Settings()
