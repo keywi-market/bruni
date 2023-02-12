@@ -44,7 +44,7 @@ class FileService:
                     "Key": FileService.MEDIA_FILE_PREFIX + path,
                     "ContentType": content_type
                 },
-                ExpiresIn=3600
+                ExpiresIn=600
             )
             logger.info("Got presigned URL: %s", url)
         except ClientError:
