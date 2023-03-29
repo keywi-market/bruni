@@ -34,7 +34,6 @@ def create_product(
     return product
 
 
-# patch or put ?!?!
 @router.patch("/{user_id}/products/{product_id}", response_model=schemas.Product)
 def update_product(
         *,

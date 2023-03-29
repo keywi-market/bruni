@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Literal
+from typing import Optional, Literal, List
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -16,8 +16,12 @@ class ProductBase(BaseModel):
     phone_number: str
 
 
+class ProductImageBase(BaseModel):
+    image_url: str
+
+
 class ProductCreate(ProductBase):
-    pass
+    images: Optional[List[ProductImageBase]]
 
 
 # Update means using put method, not fetch method.
@@ -47,10 +51,18 @@ class ProductUpdate(BaseModel):
 
 
 # Properties shared by models stored in DB
+class ProductImageInDBBase(ProductImageBase):
+    image_url: str
+
+    class Config:
+        orm_mode = True
+
+
 class ProductInDBBase(ProductBase):
     product_id: UUID
     status: str
     count: Optional[int]
+    images: Optional[List[ProductImageInDBBase]]
     create_user: UUID
     created_time: datetime
     update_user: UUID

@@ -17,6 +17,6 @@ class Brand(Base):
     update_user = Column(UUID(as_uuid=True))
     updated_time = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    category = relationship("Category", back_populates="brands", uselist=False)
+    category = relationship("Category", back_populates="brands")
 
 # Brand.__table__.create(engine)

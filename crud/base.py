@@ -29,6 +29,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> List[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
 
+    # todo Base Class인데, user_id 를 이렇게 받는게 좋은지 잘 모르겠다.... create_user 혹은 update_user 컬럼이 없을 수도 있으니깐....
     def create(self, db: Session, *, obj_in: CreateSchemaType, user_id) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data, create_user=user_id, update_user=user_id)  # type: ignore
