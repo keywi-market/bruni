@@ -11,14 +11,6 @@ from schemas import ProductCreate, ProductUpdate, ProductOrderType
 
 class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
 
-    def create(self, db: Session, *, obj_in: ProductCreate, user_id) -> Product:
-        obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data, create_user=user_id, update_user=user_id)
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
-        return db_obj
-
     def get_by_product_id(self, db: Session, product_id: UUID) -> Optional[Product]:
         product = db.query(self.model).filter(self.model.product_id == product_id).first()
         if product is None:

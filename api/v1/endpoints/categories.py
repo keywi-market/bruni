@@ -29,7 +29,8 @@ def create_category(
         db: Session = Depends(deps.get_db),
         category_in: schemas.CategoryCreate
 ) -> schemas.Category:
-    category = crud_category.create(db=db, obj_in=category_in, user_id="f2d88ba7-8c95-469e-8442-af2032176645")
+    requset_user_id = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    category = crud_category.create(db=db, obj_in=category_in, create_user_id=requset_user_id)
     return category
 
 
@@ -40,10 +41,11 @@ def update_category(
         db: Session = Depends(deps.get_db),
         category_in: schemas.CategoryUpdate
 ) -> schemas.Category:
+    requset_user_id = "856a95ea-c48e-4ba3-b322-69d7c810fb08"
     category = crud_category.get_by_category_id(db=db, category_id=category_id)
     if not category:
         raise HTTPException(status_code=404, detail="Category is not found")
-    category = crud_category.update(db=db, db_obj=category, obj_in=category_in)
+    category = crud_category.update(db=db, db_obj=category, obj_in=category_in, update_user_id=requset_user_id)
     return category
 
 
@@ -82,8 +84,9 @@ def create_brand(
         db: Session = Depends(deps.get_db),
         brand_in: schemas.BrandCreate
 ) -> schemas.Category:
+    requset_user_id = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
     category = crud_category.add_brand(db=db, category_id=category_id, obj_in=brand_in,
-                                       user_id="f2d88ba7-8c95-469e-8442-af2032176645")
+                                       create_user_id=requset_user_id)
     if not category:
         raise HTTPException(status_code=404, detail="Category doesn't exist")
     return category
@@ -97,7 +100,9 @@ def update_brand(
         db: Session = Depends(deps.get_db),
         brand_in: schemas.BrandUpdate
 ) -> schemas.Category:
-    category = crud_category.update_brand(db=db, category_id=category_id, brand_id=brand_id, obj_in=brand_in)
+    requset_user_id = "856a95ea-c48e-4ba3-b322-69d7c810fb08"
+    category = crud_category.update_brand(db=db, category_id=category_id, brand_id=brand_id, obj_in=brand_in,
+                                          update_user_id=requset_user_id)
     if not category:
         raise HTTPException(status_code=404, detail="Category or Brand doesn't exist")
     return category
