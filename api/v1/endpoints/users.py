@@ -27,6 +27,7 @@ def read_products(
 @router.post("/{user_id}/products", response_model=schemas.Product, status_code=201)
 def create_product(
         *,
+        user_id: UUID,
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductCreate,
 ) -> schemas.Product:
@@ -38,6 +39,7 @@ def create_product(
 @router.patch("/{user_id}/products/{product_id}", response_model=schemas.Product)
 def update_product(
         *,
+        user_id: UUID,
         product_id: UUID,
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductUpdate,
