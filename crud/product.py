@@ -10,6 +10,7 @@ from schemas import ProductCreate, ProductUpdate, ProductOrderType
 
 
 class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
+
     def get_by_product_id(self, db: Session, product_id: UUID) -> Optional[Product]:
         product = db.query(self.model).filter(self.model.product_id == product_id).first()
         if product is None:
@@ -75,6 +76,7 @@ class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
 
         return q.order_by(self.model.created_time.desc())
 
+    # todo product 테이블에서는 flag 처리하지만, product image는 어떻게 할지 고민해야봐야함.
     def remove(self, db: Session, product_id: UUID) -> Optional[Product]:
         product = db.query(self.model).filter(self.model.product_id == product_id).first()
         if product is None:

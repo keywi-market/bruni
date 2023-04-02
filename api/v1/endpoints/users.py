@@ -27,14 +27,15 @@ def read_products(
 @router.post("/{user_id}/products", response_model=schemas.Product, status_code=201)
 def create_product(
         *,
+        user_id: UUID,
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductCreate,
 ) -> schemas.Product:
-    product = crud_product.create(db=db, obj_in=product_in, user_id=product_in.user_id)
+    requset_user_id = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    product = crud_product.create(db=db, obj_in=product_in, create_user_id=requset_user_id)
     return product
 
 
-# patch or put ?!?!
 @router.patch("/{user_id}/products/{product_id}", response_model=schemas.Product)
 def update_product(
         *,
@@ -43,12 +44,13 @@ def update_product(
         db: Session = Depends(deps.get_db),
         product_in: schemas.ProductUpdate,
 ) -> schemas.Product:
+    requset_user_id = "856a95ea-c48e-4ba3-b322-69d7c810fb08"
     product = crud_product.get_by_product_id(db=db, product_id=product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product is not found")
     if product.is_deleted is True:
         raise HTTPException(status_code=404, detail=f"Product is already deleted")
-    product = crud_product.update(db=db, db_obj=product, obj_in=product_in)
+    product = crud_product.update(db=db, db_obj=product, obj_in=product_in, update_user_id=requset_user_id)
     return product
 
 
