@@ -42,7 +42,7 @@ class ProductUpdate(BaseModel):
                 "contents": "Optional[str]",
                 "category": "Optional[str]",
                 "brand": "Optional[str]",
-                "price": "Optional[str]",
+                "price": "Optional[int]",
                 "phone_number": "Optional[str]",
                 "status": "Optional[Literal[\"selling\", \"booked\", \"sold\"]]",
                 "update_user": "uuid"
